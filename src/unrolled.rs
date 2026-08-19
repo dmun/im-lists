@@ -509,8 +509,8 @@ impl<T: Clone, P: PointerFamily, const N: u32, const G: u32> UnrolledList<T, P, 
     // Every node must have either CAPACITY elements, or be marked as full
     // Debateable whether I want them marked as full
     #[cfg(test)]
-    pub fn assert_invariants(&self) -> bool {
-        self.node_iter().all(Self::does_node_satisfy_invariant)
+    pub fn assert_invariants(&self) {
+        assert!(self.node_iter().all(Self::does_node_satisfy_invariant))
     }
 
     pub fn get(&self, mut index: usize) -> Option<&T> {
