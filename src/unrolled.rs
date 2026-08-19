@@ -1294,6 +1294,7 @@ mod iterator_tests {
     const CAPACITY: usize = 256;
 
     type RcList<T> = UnrolledList<T, RcPointer, 256, 1>;
+    type SmallRcList<T> = UnrolledList<T, RcPointer, 4, 2>;
 
     #[test]
     fn check_size() {
@@ -1358,6 +1359,25 @@ mod iterator_tests {
 
         // 300 should be at 300
         assert_eq!(*left.get(300).unwrap(), 300);
+        left.assert_list_invariants();
+    }
+
+    #[test]
+    fn empty_node_appending_coalescing_works() {
+        // 0/4 elements/node size
+        let left: SmallRcList<i32> = SmallRcList::new();
+
+        // 2 nodes: 4/4 <- 2/8
+        let right: SmallRcList<_> = (0..6).collect::<SmallRcList<_>>().reverse();
+
+        assert_eq!(right.node_iter().count(), 2);
+
+        // 1 node: 6/8
+        let left = left.append(right);
+
+        assert_eq!(left.node_iter().count(), 1);
+        assert!(!left.is_empty());
+        assert_eq!(*left.get(5).unwrap(), 0);
         left.assert_list_invariants();
     }
 
@@ -1837,3 +1857,4 @@ mod reference_counting_correctness {
         assert_eq!(result.strong_count(), 1);
     }
 }
+
