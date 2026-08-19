@@ -1175,6 +1175,9 @@ impl<T: Clone, P: PointerFamily, const N: u32, const G: u32> FromIterator<Unroll
                     // Swap the locations now after we've done the update
                     std::mem::swap(&mut left_inner.elements, &mut right_inner.elements);
 
+                    // Update this node to use correct capacity
+                    std::mem::swap(&mut left_inner.size, &mut right_inner.size);
+
                     // Adjust the indices accordingly
                     left_inner.index = left_inner.elements.len() as u32;
                     right_inner.index = 0;
