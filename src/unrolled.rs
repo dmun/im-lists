@@ -1375,6 +1375,10 @@ mod iterator_tests {
         // 1 node: 6/8
         let left = left.append(right);
 
+        left.node_iter().for_each(|node| {
+            println!("{}/{}: {:?}", node.index(), node.size(), node.elements());
+        });
+
         assert_eq!(left.node_iter().count(), 1);
         assert!(!left.is_empty());
         assert_eq!(*left.get(5).unwrap(), 0);
